@@ -49,8 +49,6 @@ try {
         if ($auth->isAuthenticated()) {
             $data = $auth->getAttributes();
 
-error_log(print_r($data, true));
-
             #Check Roles
             $authorized = false;
             foreach($data[SAML_ROLES] as $role) {
