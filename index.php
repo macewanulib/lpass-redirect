@@ -26,12 +26,15 @@ require __DIR__ . '/config.php';
 
 use OneLogin\Saml2\Auth;
 use OneLogin\Saml2\Error;
+use Symfony\Component\Intl\Countries;
 
 # Load settings
 $auth = new Auth();
 
 # Start session for SAML processing
 session_start();
+
+error_log($_SERVER['REQUEST_METHOD']);
 
 try {
     # Check if this request has a valid SAML Response
@@ -48,6 +51,8 @@ try {
         # Check if user is authenticated
         if ($auth->isAuthenticated()) {
             $data = $auth->getAttributes();
+
+error_log(print_r($data, true));
 
             #Check Roles
             $authorized = false;
@@ -66,7 +71,7 @@ try {
                                          'dateofbirth' => $data[SAML_BIRTH_DATE][0],
                                          'profile' => 'MacEwan University',
                                          'studentid' => $data[SAML_USER_ID][0],
-                                         'id' => $data[SAML_USER_ID][0]
+                                         'id' => sprintf('%s%0' . ID_LENGTH . 'd', MACEWAN_NEOS_PREFIX, $data[SAML_USER_ID][0])
                                         );
 
                 # Phone
@@ -89,7 +94,16 @@ try {
                 $submission_data['city'] = ucwords(strtolower($bits[4]));
                 $submission_data['province'] = $bits[5];
                 $submission_data['postalcode'] = $bits[6];
-                $submission_data['country'] = ucwords(strtolower($bits[7]));
+                $submission_data['country'] = $bits[7];
+
+                # Convert Country if Three Character Code
+                if(preg_match('/^[A-Z]{3}$/', $submission_data['country'])) {
+                  $a3_to_a2 = array_flip(Countries::getAlpha3Codes());
+                  if(isset($a3_to_a2[$submission_data['country']])) {
+                    $a2 = $a3_to_a2[$submission_data['country']];
+                    $submission_data['country'] = Countries::getName($a2, 'en');
+                  }
+                }
 
                 # Expiry Date
                 $expiry = DateTime::createFromFormat('Y-m-d', date('Y') . '-' . EXPIRY_DATE);
@@ -99,7 +113,7 @@ try {
                     $expiry->modify('+1 year');
                 }
                 $submission_data['expirydate'] = $expiry->format('Y-m-d');
-
+error_log(print_r($submission_data, true));
                 #Now we need a different authorization token for submitting user information
                 $ath_postbody = array('username' => EPL_API_AUTH_USERNAME,
                                       'password' => EPL_API_AUTH_PASSWORD);

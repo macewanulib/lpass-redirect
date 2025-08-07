@@ -21,7 +21,13 @@
   # day L-Pass accounts with a configurable leeway.
   define('EXPIRY_DATE', '08-30'); # MM-DD
   define('EXPIRY_LEEWAY', '+14 days'); # Datetime difference to apply to "now" so people don't register for an L-Pass that expires in a day
-                                                   
+                               
+  # MacEwan ID
+  #   Configuration concerning formatting the "id" value for L-Pass.  This includes a prefix value and a total length for zero-padding, resulting
+  # in a number like '3201234567' for MacEwan
+  define('MACEWAN_NEOS_PREFIX', '32');
+  define('ID_LENGTH', 8); # Zero pads the person id to this many characters.  Does not include the prefix.
+
   # EPL API Config
   #   Configuration for connecting and authenticating to the EPL L-Pass API and Form
   define('EPL_API_BASE_URL', 'https://lpass.domain.com/api');
