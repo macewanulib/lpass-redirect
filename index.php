@@ -34,8 +34,6 @@ $auth = new Auth(SAML_SETTINGS);
 # Start session for SAML processing
 session_start();
 
-error_log($_SERVER['REQUEST_METHOD']);
-
 try {
     # Check if this request has a valid SAML Response
     if (isset($_POST['SAMLResponse'])) {
@@ -51,8 +49,6 @@ try {
         # Check if user is authenticated
         if ($auth->isAuthenticated()) {
             $data = $auth->getAttributes();
-
-error_log(print_r($data, true));
 
             #Check Roles
             $authorized = false;
@@ -113,7 +109,6 @@ error_log(print_r($data, true));
                     $expiry->modify('+1 year');
                 }
                 $submission_data['expirydate'] = $expiry->format('Y-m-d');
-error_log(print_r($submission_data, true));
                 #Now we need a different authorization token for submitting user information
                 $ath_postbody = array('username' => EPL_API_AUTH_USERNAME,
                                       'password' => EPL_API_AUTH_PASSWORD);
