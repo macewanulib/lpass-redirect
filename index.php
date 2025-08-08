@@ -29,7 +29,7 @@ use OneLogin\Saml2\Error;
 use Symfony\Component\Intl\Countries;
 
 # Load settings
-$auth = new Auth();
+$auth = new Auth(SAML_SETTINGS);
 
 # Start session for SAML processing
 session_start();
