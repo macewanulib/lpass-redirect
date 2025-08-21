@@ -27,6 +27,9 @@
   # in a number like '3201234567' for MacEwan
   define('MACEWAN_NEOS_PREFIX', '32');
   define('ID_LENGTH', 12); # Zero pads the person id to this many characters.  Does not include the prefix.
+  define('OBFUSCATION_A', 1234567891);  # Integer used to uniquely obfuscate ID numbers.  Must be coprime with 10
+  define('OBFUSCATION_B', 9876543219);  # Another integer used to uniquely obfuscate ID numbers.
+  define('OBFUSCATION_M', 10000000000); # Determines the length of the obfuscated value (10^x for an "x" digit number)
 
   # EPL API Config
   #   Configuration for connecting and authenticating to the EPL L-Pass API and Form

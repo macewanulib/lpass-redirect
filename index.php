@@ -28,11 +28,23 @@ use OneLogin\Saml2\Auth;
 use OneLogin\Saml2\Error;
 use Symfony\Component\Intl\Countries;
 
+
+# Functions
+function obfuscate_id($id) {
+  $x = (int)$id;
+
+  $y = (OBFUSCATION_A * $x + OBFUSCATION_B) % OBFUSCATION_M;
+
+  return str_pad((string)$y, ID_LENGTH, '0', STR_PAD_LEFT);
+}
+
 # Load settings
 $auth = new Auth(SAML_SETTINGS);
 
 # Start session for SAML processing
 session_start();
+
+error_log($_SERVER['REQUEST_METHOD']);
 
 try {
     # Check if this request has a valid SAML Response
@@ -49,6 +61,8 @@ try {
         # Check if user is authenticated
         if ($auth->isAuthenticated()) {
             $data = $auth->getAttributes();
+
+error_log(print_r($data, true));
 
             #Check Roles
             $authorized = false;
@@ -67,7 +81,7 @@ try {
                                          'dateofbirth' => $data[SAML_BIRTH_DATE][0],
                                          'profile' => 'MacEwan University',
                                          'studentid' => $data[SAML_USER_ID][0],
-                                         'id' => sprintf('%s%0' . ID_LENGTH . 'd', MACEWAN_NEOS_PREFIX, $data[SAML_USER_ID][0])
+                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID])
                                         );
 
                 # Phone
@@ -109,6 +123,7 @@ try {
                     $expiry->modify('+1 year');
                 }
                 $submission_data['expirydate'] = $expiry->format('Y-m-d');
+error_log(print_r($submission_data, true));
                 #Now we need a different authorization token for submitting user information
                 $ath_postbody = array('username' => EPL_API_AUTH_USERNAME,
                                       'password' => EPL_API_AUTH_PASSWORD);
