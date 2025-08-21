@@ -77,7 +77,7 @@ try {
                                          'dateofbirth' => $data[SAML_BIRTH_DATE][0],
                                          'profile' => 'MacEwan University',
                                          'studentid' => $data[SAML_USER_ID][0],
-                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID])
+                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID][0])
                                         );
 
                 # Phone
