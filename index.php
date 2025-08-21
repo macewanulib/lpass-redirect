@@ -44,8 +44,6 @@ $auth = new Auth(SAML_SETTINGS);
 # Start session for SAML processing
 session_start();
 
-error_log($_SERVER['REQUEST_METHOD']);
-
 try {
     # Check if this request has a valid SAML Response
     if (isset($_POST['SAMLResponse'])) {
