@@ -30,6 +30,9 @@ use Symfony\Component\Intl\Countries;
 
 
 # Functions
+
+# Obfuscate ID - transforms a number (person id) into a different, unique and reliable number
+#                so our person ids are not being printed out in plain text anywhere.
 function obfuscate_id($id) {
   $x = (int)$id;
 
@@ -70,14 +73,14 @@ try {
 
             if($authorized) {
                 # User Authorized... convert data into submission format
-                $submission_data = array('firstname' => $data[SAML_FIRST_NAME][0],
-                                         'lastname' => $data[SAML_LAST_NAME][0],
-                                         'middlename' => $data[SAML_MIDDLE_NAME][0],
-                                         'email' => $data[SAML_EMAIL][0],
-                                         'dateofbirth' => $data[SAML_BIRTH_DATE][0],
+                $submission_data = array('firstname' => (isset($data[SAML_FIRST_NAME][0])) ? $data[SAML_FIRST_NAME][0] : '',
+                                         'lastname' => (isset($data[SAML_LAST_NAME][0])) ? $data[SAML_LAST_NAME][0] : '',
+                                         'middlename' => (isset($data[SAML_MIDDLE_NAME][0])) ? $data[SAML_MIDDLE_NAME][0] : '',
+                                         'email' => (isset($data[SAML_EMAIL][0])) ? $data[SAML_EMAIL][0] : '',
+                                         'dateofbirth' => (isset($data[SAML_BIRTH_DATE][0])) ? $data[SAML_BIRTH_DATE][0] : '',
                                          'profile' => 'MacEwan University',
                                          'studentid' => $data[SAML_USER_ID][0],
-                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID])
+                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID][0])
                                         );
 
                 # Phone
@@ -119,6 +122,8 @@ try {
                     $expiry->modify('+1 year');
                 }
                 $submission_data['expirydate'] = $expiry->format('Y-m-d');
+
+error_log(print_r($submission_data, true));
 
                 #Now we need a different authorization token for submitting user information
                 $ath_postbody = array('username' => EPL_API_AUTH_USERNAME,
