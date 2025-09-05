@@ -79,8 +79,8 @@ try {
                                          'email' => (isset($data[SAML_EMAIL][0])) ? $data[SAML_EMAIL][0] : '',
                                          'dateofbirth' => (isset($data[SAML_BIRTH_DATE][0])) ? $data[SAML_BIRTH_DATE][0] : '',
                                          'profile' => 'MacEwan University',
-                                         'studentid' => $data[SAML_USER_ID][0],
-                                         'id' => MACEWAN_NEOS_PREFIX . obfuscate_id($data[SAML_USER_ID][0])
+                                         'studentid' => obfuscate_id($data[SAML_USER_ID][0]),
+                                         'id' => MACEWAN_NEOS_PREFIX,
                                         );
 
                 # Phone
@@ -122,8 +122,6 @@ try {
                     $expiry->modify('+1 year');
                 }
                 $submission_data['expirydate'] = $expiry->format('Y-m-d');
-
-error_log(print_r($submission_data, true));
 
                 #Now we need a different authorization token for submitting user information
                 $ath_postbody = array('username' => EPL_API_AUTH_USERNAME,

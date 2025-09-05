@@ -25,8 +25,9 @@
   # MacEwan ID
   #   Configuration concerning formatting the "id" value for L-Pass.  This includes a prefix value and a total length for zero-padding, resulting
   # in a number like '3201234567' for MacEwan
-  define('MACEWAN_NEOS_PREFIX', '32');
-  define('ID_LENGTH', 12); # Zero pads the person id to this many characters.  Does not include the prefix.
+  define('MACEWAN_NEOS_PREFIX', '1230'); # This values is sent as "id" and matches what EPL has configured for your institution prefix.
+  define('ID_LENGTH', 10); # Zero pads the obfuscated person id to this many characters.  Does not include the prefix.
+                           #   Both prefix and id together should add up to 13 or 14 digits, as per EPL requirements.
   define('OBFUSCATION_A', 1234567891);  # Integer used to uniquely obfuscate ID numbers.  Must be coprime with 10
   define('OBFUSCATION_B', 9876543219);  # Another integer used to uniquely obfuscate ID numbers.
   define('OBFUSCATION_M', 10000000000); # Determines the length of the obfuscated value (10^x for an "x" digit number)
