@@ -119,8 +119,8 @@
 
         // Usually x509cert and privateKey of the SP are provided by files placed at
         // the certs folder. But we can also provide them with the following parameters
-        'x509cert' => '/path/to/SAML/cert.pem',
-        'privateKey' => '/path/to/SAML/key.pem',
+        'x509cert' => trim(file_get_contents('/path/to/SAML/cert.pem')),
+        'privateKey' => trim(file_get_contents('/path/to/SAML/key.pem')),
 
         /*
          * Key rollover
