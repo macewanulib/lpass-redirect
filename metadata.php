@@ -1,11 +1,12 @@
 <?php
 
   require_once '../vendor/autoload.php';
+  require_once __DIR__ . '/config.php';
 
   use OneLogin\Saml2\Auth;
 
 try {
-    $auth = new Auth();
+    $auth = new Auth(SAML_SETTINGS);
     $settings = $auth->getSettings();
     $metadata = $settings->getSPMetadata();
     $errors = $settings->validateMetadata($metadata);
@@ -13,10 +14,7 @@ try {
         header('Content-Type: text/xml');
         echo $metadata;
     } else {
-        throw new OneLogin_Saml2_Error(
-            'Invalid SP metadata: '.implode(', ', $errors),
-            OneLogin_Saml2_Error::METADATA_SP_INVALID
-        );
+           echo 'Invalid SP metadata: '.implode(', ', $errors);
     }
 } catch (Exception $e) {
     echo $e->getMessage();
